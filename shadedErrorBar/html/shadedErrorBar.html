@@ -1,0 +1,401 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>shadedErrorBar</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-10-13"><meta name="DC.source" content="shadedErrorBar.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="keyword">function</span> varargout=shadedErrorBar(x,y,errBar,lineProps,transparent)
+<span class="comment">% function H=shadedErrorBar(x,y,errBar,lineProps,transparent)</span>
+<span class="comment">%</span>
+<span class="comment">% Purpose</span>
+<span class="comment">% Makes a 2-d line plot with a pretty shaded error bar made</span>
+<span class="comment">% using patch. Error bar color is chosen automatically.</span>
+<span class="comment">%</span>
+<span class="comment">% Inputs</span>
+<span class="comment">% x - vector of x values [optional, can be left empty]</span>
+<span class="comment">% y - vector of y values or a matrix of n observations by m cases</span>
+<span class="comment">%     where m has length(x);</span>
+<span class="comment">% errBar - if a vector we draw symmetric errorbars. If it has a size</span>
+<span class="comment">%          of [2,length(x)] then we draw asymmetric error bars with</span>
+<span class="comment">%          row 1 being the upper bar and row 2 being the lower bar</span>
+<span class="comment">%          (with respect to y). ** alternatively ** errBar can be a</span>
+<span class="comment">%          cellArray of two function handles. The first defines which</span>
+<span class="comment">%          statistic the line should be and the second defines the</span>
+<span class="comment">%          error bar.</span>
+<span class="comment">% lineProps - [optional,'-k' by default] defines the properties of</span>
+<span class="comment">%             the data line. e.g.:</span>
+<span class="comment">%             'or-', or {'-or','markerfacecolor',[1,0.2,0.2]}</span>
+<span class="comment">% transparent - [optional, 0 by default] if ==1 the shaded error</span>
+<span class="comment">%               bar is made transparent, which forces the renderer</span>
+<span class="comment">%               to be openGl. However, if this is saved as .eps the</span>
+<span class="comment">%               resulting file will contain a raster not a vector</span>
+<span class="comment">%               image.</span>
+<span class="comment">%</span>
+<span class="comment">% Outputs</span>
+<span class="comment">% H - a structure of handles to the generated plot objects.</span>
+<span class="comment">%</span>
+<span class="comment">%</span>
+<span class="comment">% Examples</span>
+<span class="comment">% y=randn(30,80); x=1:size(y,2);</span>
+<span class="comment">% shadedErrorBar(x,mean(y,1),std(y),'g');</span>
+<span class="comment">% shadedErrorBar(x,y,{@median,@std},{'r-o','markerfacecolor','r'});</span>
+<span class="comment">% shadedErrorBar([],y,{@median,@std},{'r-o','markerfacecolor','r'});</span>
+<span class="comment">%</span>
+<span class="comment">% Overlay two transparent lines</span>
+<span class="comment">% y=randn(30,80)*10; x=(1:size(y,2))-40;</span>
+<span class="comment">% shadedErrorBar(x,y,{@mean,@std},'-r',1);</span>
+<span class="comment">% hold on</span>
+<span class="comment">% y=ones(30,1)*x; y=y+0.06*y.^2+randn(size(y))*10;</span>
+<span class="comment">% shadedErrorBar(x,y,{@mean,@std},'-b',1);</span>
+<span class="comment">% hold off</span>
+<span class="comment">%</span>
+<span class="comment">%</span>
+<span class="comment">% Rob Campbell - November 2009</span>
+
+
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% Error checking</span>
+error(nargchk(3,5,nargin))
+
+
+<span class="comment">%Process y using function handles if needed to make the error bar</span>
+<span class="comment">%dynamically</span>
+<span class="keyword">if</span> iscell(errBar)
+    fun1=errBar{1};
+    fun2=errBar{2};
+    errBar=fun2(y);
+    y=fun1(y);
+<span class="keyword">else</span>
+    y=y(:)';
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> isempty(x)
+    x=1:length(y);
+<span class="keyword">else</span>
+    x=x(:)';
+<span class="keyword">end</span>
+
+
+<span class="comment">%Make upper and lower error bars if only one was specified</span>
+<span class="keyword">if</span> length(errBar)==length(errBar(:))
+    errBar=repmat(errBar(:)',2,1);
+<span class="keyword">else</span>
+    s=size(errBar);
+    f=find(s==2);
+    <span class="keyword">if</span> isempty(f), error(<span class="string">'errBar has the wrong size'</span>), <span class="keyword">end</span>
+    <span class="keyword">if</span> f==2, errBar=errBar'; <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> length(x) ~= length(errBar)
+    error(<span class="string">'length(x) must equal length(errBar)'</span>)
+<span class="keyword">end</span>
+
+<span class="comment">%Set default options</span>
+defaultProps={<span class="string">'-k'</span>};
+<span class="keyword">if</span> nargin&lt;4, lineProps=defaultProps; <span class="keyword">end</span>
+<span class="keyword">if</span> isempty(lineProps), lineProps=defaultProps; <span class="keyword">end</span>
+<span class="keyword">if</span> ~iscell(lineProps), lineProps={lineProps}; <span class="keyword">end</span>
+
+<span class="keyword">if</span> nargin&lt;5, transparent=0; <span class="keyword">end</span>
+
+
+
+
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% Plot to get the parameters of the line</span>
+H.mainLine=plot(x,y,lineProps{:});
+
+
+<span class="comment">% Work out the color of the shaded region and associated lines</span>
+<span class="comment">% Using alpha requires the render to be openGL and so you can't</span>
+<span class="comment">% save a vector image. On the other hand, you need alpha if you're</span>
+<span class="comment">% overlaying lines. There we have the option of choosing alpha or a</span>
+<span class="comment">% de-saturated solid colour for the patch surface .</span>
+
+col=get(H.mainLine,<span class="string">'color'</span>);
+edgeColor=col+(1-col)*0.55;
+patchSaturation=0.15; <span class="comment">%How de-saturated or transparent to make patch</span>
+<span class="keyword">if</span> transparent
+    faceAlpha=patchSaturation;
+    patchColor=col;
+    set(gcf,<span class="string">'renderer'</span>,<span class="string">'openGL'</span>)
+<span class="keyword">else</span>
+    faceAlpha=1;
+    patchColor=col+(1-col)*(1-patchSaturation);
+    set(gcf,<span class="string">'renderer'</span>,<span class="string">'painters'</span>)
+<span class="keyword">end</span>
+
+
+<span class="comment">%Calculate the error bars</span>
+uE=y+errBar(1,:);
+lE=y-errBar(2,:);
+
+
+<span class="comment">%Add the patch error bar</span>
+holdStatus=ishold;
+<span class="keyword">if</span> ~holdStatus, hold <span class="string">on</span>,  <span class="keyword">end</span>
+
+
+<span class="comment">%Make the patch</span>
+yP=[lE,fliplr(uE)];
+xP=[x,fliplr(x)];
+
+<span class="comment">%remove nans otherwise patch won't work</span>
+xP(isnan(yP))=[];
+yP(isnan(yP))=[];
+
+
+H.patch=patch(xP,yP,1,<span class="string">'facecolor'</span>,patchColor,<span class="keyword">...</span>
+              <span class="string">'edgecolor'</span>,<span class="string">'none'</span>,<span class="keyword">...</span>
+              <span class="string">'facealpha'</span>,faceAlpha);
+
+
+<span class="comment">%Make pretty edges around the patch.</span>
+H.edge(1)=plot(x,lE,<span class="string">'-'</span>,<span class="string">'color'</span>,edgeColor);
+H.edge(2)=plot(x,uE,<span class="string">'-'</span>,<span class="string">'color'</span>,edgeColor);
+
+<span class="comment">%Now replace the line (this avoids having to bugger about with z coordinates)</span>
+delete(H.mainLine)
+H.mainLine=plot(x,y,lineProps{:});
+
+
+<span class="keyword">if</span> ~holdStatus, hold <span class="string">off</span>, <span class="keyword">end</span>
+
+
+<span class="keyword">if</span> nargout==1
+    varargout{1}=H;
+<span class="keyword">end</span>
+</pre><pre class="codeoutput error">Error using shadedErrorBar (line 53)
+Not enough input arguments.
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function varargout=shadedErrorBar(x,y,errBar,lineProps,transparent)
+% function H=shadedErrorBar(x,y,errBar,lineProps,transparent)
+%
+% Purpose 
+% Makes a 2-d line plot with a pretty shaded error bar made
+% using patch. Error bar color is chosen automatically.
+%
+% Inputs
+% x - vector of x values [optional, can be left empty]
+% y - vector of y values or a matrix of n observations by m cases
+%     where m has length(x);
+% errBar - if a vector we draw symmetric errorbars. If it has a size
+%          of [2,length(x)] then we draw asymmetric error bars with
+%          row 1 being the upper bar and row 2 being the lower bar
+%          (with respect to y). ** alternatively ** errBar can be a
+%          cellArray of two function handles. The first defines which
+%          statistic the line should be and the second defines the
+%          error bar.
+% lineProps - [optional,'-k' by default] defines the properties of
+%             the data line. e.g.:    
+%             'or-', or {'-or','markerfacecolor',[1,0.2,0.2]}
+% transparent - [optional, 0 by default] if ==1 the shaded error
+%               bar is made transparent, which forces the renderer
+%               to be openGl. However, if this is saved as .eps the
+%               resulting file will contain a raster not a vector
+%               image. 
+%
+% Outputs
+% H - a structure of handles to the generated plot objects.     
+%
+%
+% Examples
+% y=randn(30,80); x=1:size(y,2);
+% shadedErrorBar(x,mean(y,1),std(y),'g');
+% shadedErrorBar(x,y,{@median,@std},{'r-o','markerfacecolor','r'});    
+% shadedErrorBar([],y,{@median,@std},{'r-o','markerfacecolor','r'});    
+%
+% Overlay two transparent lines
+% y=randn(30,80)*10; x=(1:size(y,2))-40;
+% shadedErrorBar(x,y,{@mean,@std},'-r',1); 
+% hold on
+% y=ones(30,1)*x; y=y+0.06*y.^2+randn(size(y))*10;
+% shadedErrorBar(x,y,{@mean,@std},'-b',1); 
+% hold off
+%
+%
+% Rob Campbell - November 2009
+
+
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+% Error checking    
+error(nargchk(3,5,nargin))
+
+
+%Process y using function handles if needed to make the error bar
+%dynamically
+if iscell(errBar) 
+    fun1=errBar{1};
+    fun2=errBar{2};
+    errBar=fun2(y);
+    y=fun1(y);
+else
+    y=y(:)';
+end
+
+if isempty(x)
+    x=1:length(y);
+else
+    x=x(:)';
+end
+
+
+%Make upper and lower error bars if only one was specified
+if length(errBar)==length(errBar(:))
+    errBar=repmat(errBar(:)',2,1);
+else
+    s=size(errBar);
+    f=find(s==2);
+    if isempty(f), error('errBar has the wrong size'), end
+    if f==2, errBar=errBar'; end
+end
+
+if length(x) ~= length(errBar)
+    error('length(x) must equal length(errBar)')
+end
+
+%Set default options
+defaultProps={'-k'};
+if nargin<4, lineProps=defaultProps; end
+if isempty(lineProps), lineProps=defaultProps; end
+if ~iscell(lineProps), lineProps={lineProps}; end
+
+if nargin<5, transparent=0; end
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+% Plot to get the parameters of the line 
+H.mainLine=plot(x,y,lineProps{:});
+
+
+% Work out the color of the shaded region and associated lines
+% Using alpha requires the render to be openGL and so you can't
+% save a vector image. On the other hand, you need alpha if you're
+% overlaying lines. There we have the option of choosing alpha or a
+% de-saturated solid colour for the patch surface .
+
+col=get(H.mainLine,'color');
+edgeColor=col+(1-col)*0.55;
+patchSaturation=0.15; %How de-saturated or transparent to make patch
+if transparent
+    faceAlpha=patchSaturation;
+    patchColor=col;
+    set(gcf,'renderer','openGL')
+else
+    faceAlpha=1;
+    patchColor=col+(1-col)*(1-patchSaturation);
+    set(gcf,'renderer','painters')
+end
+
+    
+%Calculate the error bars
+uE=y+errBar(1,:);
+lE=y-errBar(2,:);
+
+
+%Add the patch error bar
+holdStatus=ishold;
+if ~holdStatus, hold on,  end
+
+
+%Make the patch
+yP=[lE,fliplr(uE)];
+xP=[x,fliplr(x)];
+
+%remove nans otherwise patch won't work
+xP(isnan(yP))=[];
+yP(isnan(yP))=[];
+
+
+H.patch=patch(xP,yP,1,'facecolor',patchColor,...
+              'edgecolor','none',...
+              'facealpha',faceAlpha);
+
+
+%Make pretty edges around the patch. 
+H.edge(1)=plot(x,lE,'-','color',edgeColor);
+H.edge(2)=plot(x,uE,'-','color',edgeColor);
+
+%Now replace the line (this avoids having to bugger about with z coordinates)
+delete(H.mainLine)
+H.mainLine=plot(x,y,lineProps{:});
+
+
+if ~holdStatus, hold off, end
+
+
+if nargout==1
+    varargout{1}=H;
+end
+
+##### SOURCE END #####
+--></body></html>

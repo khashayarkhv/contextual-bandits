@@ -1,0 +1,272 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>rungreedybanditlogistic</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-07-22"><meta name="DC.source" content="rungreedybanditlogistic.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">rungreedybanditlogistic.m</a></li><li><a href="#2">Inputs:</a></li><li><a href="#3">Outputs:</a></li></ul></div><h2>rungreedybanditlogistic.m<a name="1"></a></h2><pre class="codeinput"><span class="comment">% Runs Greedy Bandit algorithm with logistic reward.</span>
+<span class="comment">%</span>
+<span class="comment">% This code implements the Greedy Bandit algorithm with logistic rewards.</span>
+<span class="comment">% For more information, see our paper</span>
+<span class="comment">%</span>
+<span class="comment">% - https://arxiv.org/abs/1704.09011.</span>
+<span class="comment">%</span>
+<span class="comment">% The algorithm proceeds as follows:</span>
+<span class="comment">% First each arm is forced sampled by some number of time periods</span>
+<span class="comment">% given by random_initialization). Then, at each time period the arm with</span>
+<span class="comment">% the highest estimated mean is pulled. Unlike the linear case, this</span>
+<span class="comment">% version does not apply Sherman-Morrison rank on update.</span>
+<span class="comment">% Before having invertible covariance matrices, the algorithm applies ridge</span>
+<span class="comment">% regression for more accurate estimations.</span>
+<span class="comment">%</span>
+</pre><h2>Inputs:<a name="2"></a></h2><pre class="language-matlab">k: Number of <span class="string">arms.</span>
+T: Time horizon.
+d: Dimension of <span class="string">covariates.</span>
+b: A k*d matrix <span class="string">of</span> <span class="string">arm</span> <span class="string">parameters.</span>
+xmax: Maximum of <span class="string">l2-norm</span> <span class="string">of</span> <span class="string">covariates</span>
+    (used only <span class="keyword">for</span> context generation). This parameter <span class="string">is</span> <span class="string">unused</span> <span class="string">if</span>
+    noise <span class="string">and</span> <span class="string">contexts</span> <span class="string">are</span> <span class="string">provided.</span>
+random_initialization: Number of <span class="string">rounds</span> <span class="string">of</span> <span class="string">forced</span> <span class="string">sampling</span> <span class="string">per</span> <span class="string">arm</span> <span class="string">in</span>
+    the <span class="string">beginning.</span> <span class="string">If</span> <span class="string">set</span> <span class="string">to</span> <span class="string">zero</span>, the <span class="string">algorithm</span> <span class="string">is</span> <span class="string">purely</span> <span class="string">greedy.</span>
+contexts: A T*d matrix <span class="string">of</span> <span class="string">contexts.</span>
+reward_vector: A T*k matrix <span class="string">of</span> <span class="string">reward</span> <span class="string">vectors.</span>
+verbose: Whether to <span class="string">print</span> <span class="string">outputs</span> <span class="string">or</span> <span class="string">not.</span>
+</pre><h2>Outputs:<a name="3"></a></h2><pre class="language-matlab">regret: Cumulative regret <span class="string">as</span> <span class="string">a</span> <span class="string">running</span> <span class="string">sum</span> <span class="string">over</span> <span class="string">regret</span> <span class="string">terms.</span>
+fractions: Fractions of <span class="string">pulls</span> <span class="string">of</span> <span class="string">different</span> <span class="string">arms.</span>
+</pre><pre class="codeinput"><span class="keyword">function</span> [regret, fractions] = rungreedybanditlogistic(k, T, d, b, <span class="keyword">...</span>
+    random_initialization, contexts, reward_vector, verbose)
+
+warning(<span class="string">'off'</span>,<span class="string">'all'</span>);
+
+pull_ind = zeros(T, k);  <span class="comment">% Binary indicator whether each is pulled.</span>
+
+regret = zeros(1, T);
+betahat = b * 0;  <span class="comment">% Initialize all arm estimations with vector of zeros.</span>
+
+<span class="keyword">for</span> t=1:T
+    x = contexts(t,:)';
+
+    <span class="comment">%----- First, choose which arm to pull this round.</span>
+
+    <span class="keyword">if</span> (t&gt;random_initialization * k)
+        z = betahat * x;
+        opt_arms = find(z==max(z));
+        <span class="comment">% Break ties randomly.</span>
+        arm_pulled = opt_arms(randi(length(opt_arms)));
+    <span class="keyword">else</span>
+        arm_pulled = mod(t-1, k) + 1;
+    <span class="keyword">end</span>
+    pull_ind(t, arm_pulled) = 1;
+
+    <span class="comment">%------ Second, calculate the regret.</span>
+
+    bx = b*x;
+    [largest_inner_product, ~] = max(bx);
+    bestreward = exp(largest_inner_product) / <span class="keyword">...</span>
+        (1 + exp(largest_inner_product));
+    ourreward = exp(bx(arm_pulled)) / (1 + exp(bx(arm_pulled)));
+
+    <span class="keyword">if</span> (t==1)
+        regret(t) = bestreward - ourreward;
+    <span class="keyword">else</span>
+        regret(t) = regret(t-1) + bestreward - ourreward;
+    <span class="keyword">end</span>
+
+    <span class="comment">%------ Third, update estimates.</span>
+
+    obs_filt = find(pull_ind(:, arm_pulled)==1);  <span class="comment">% Filter observations.</span>
+    lsX = contexts(obs_filt, :); <span class="comment">% Design matrix.</span>
+    lsY = reward_vector(obs_filt, arm_pulled);  <span class="comment">% Observations.</span>
+    <span class="keyword">if</span> (size(lsX,1)&gt;=d &amp;&amp; rank(lsX)&gt;=d)
+        mdl = fitglm(lsX, lsY, <span class="string">'linear'</span>,<span class="string">'Distribution'</span>, <span class="keyword">...</span>
+            <span class="string">'binomial'</span>, <span class="string">'Intercept'</span>, false);
+        betahat(arm_pulled ,:) = mdl.Coefficients.Estimate';
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> (verbose==1)
+        <span class="keyword">if</span> (mod(t,500)==0)
+            fprintf(<span class="string">'GLM-GB: t=%d, parameter estimation error = %f. \n'</span>, t, <span class="keyword">...</span>
+                norm(b - betahat, <span class="string">'fro'</span>))
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+fractions = mean(pull_ind);  <span class="comment">% Fraction of times each arm is pulled.</span>
+<span class="keyword">if</span>(verbose==1)
+    fprintf(<span class="string">'GLM-GB: Total parameter estimation error = %f. \n'</span>, <span class="keyword">...</span>
+        norm(b - betahat, <span class="string">'fro'</span>));
+    fprintf(<span class="string">'GLM-GB: Fraction of pulls = %f. \n'</span>, fractions);
+    fprintf(<span class="string">'GLM-GB: Total regret occured = %f. \n'</span>, regret(end));
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><pre class="codeoutput error">Error using rungreedybanditlogistic (line 43)
+Not enough input arguments.
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% rungreedybanditlogistic.m
+
+% Runs Greedy Bandit algorithm with logistic reward.
+% 
+% This code implements the Greedy Bandit algorithm with logistic rewards. 
+% For more information, see our paper 
+% 
+% - https://arxiv.org/abs/1704.09011. 
+% 
+% The algorithm proceeds as follows:
+% First each arm is forced sampled by some number of time periods 
+% given by random_initialization). Then, at each time period the arm with
+% the highest estimated mean is pulled. Unlike the linear case, this
+% version does not apply Sherman-Morrison rank on update.
+% Before having invertible covariance matrices, the algorithm applies ridge
+% regression for more accurate estimations.
+%
+%% Inputs:
+%   k: Number of arms.
+%   T: Time horizon.
+%   d: Dimension of covariates.
+%   b: A k*d matrix of arm parameters.
+%   xmax: Maximum of l2-norm of covariates 
+%       (used only for context generation). This parameter is unused if 
+%       noise and contexts are provided.
+%   random_initialization: Number of rounds of forced sampling per arm in 
+%       the beginning. If set to zero, the algorithm is purely greedy.
+%   contexts: A T*d matrix of contexts.
+%   reward_vector: A T*k matrix of reward vectors.
+%   verbose: Whether to print outputs or not.
+%% Outputs:
+%
+%   regret: Cumulative regret as a running sum over regret terms.
+%   fractions: Fractions of pulls of different arms.
+%
+
+
+function [regret, fractions] = rungreedybanditlogistic(k, T, d, b, ...
+    random_initialization, contexts, reward_vector, verbose)
+
+warning('off','all');
+
+pull_ind = zeros(T, k);  % Binary indicator whether each is pulled.
+
+regret = zeros(1, T);
+betahat = b * 0;  % Initialize all arm estimations with vector of zeros.
+
+for t=1:T
+    x = contexts(t,:)';
+    
+    %REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- First, choose which arm to pull this round.
+    
+    if (t>random_initialization * k)
+        z = betahat * x;
+        opt_arms = find(z==max(z)); 
+        % Break ties randomly.
+        arm_pulled = opt_arms(randi(length(opt_arms)));  
+    else
+        arm_pulled = mod(t-1, k) + 1;
+    end
+    pull_ind(t, arm_pulled) = 1;
+    
+    %REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH Second, calculate the regret.
+    
+    bx = b*x;
+    [largest_inner_product, ~] = max(bx);
+    bestreward = exp(largest_inner_product) / ...
+        (1 + exp(largest_inner_product));
+    ourreward = exp(bx(arm_pulled)) / (1 + exp(bx(arm_pulled)));
+    
+    if (t==1)
+        regret(t) = bestreward - ourreward;
+    else
+        regret(t) = regret(t-1) + bestreward - ourreward;
+    end
+    
+    %REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH Third, update estimates.
+    
+    obs_filt = find(pull_ind(:, arm_pulled)==1);  % Filter observations.
+    lsX = contexts(obs_filt, :); % Design matrix.
+    lsY = reward_vector(obs_filt, arm_pulled);  % Observations.
+    if (size(lsX,1)>=d && rank(lsX)>=d)
+        mdl = fitglm(lsX, lsY, 'linear','Distribution', ...
+            'binomial', 'Intercept', false);
+        betahat(arm_pulled ,:) = mdl.Coefficients.Estimate';
+    end
+    if (verbose==1)
+        if (mod(t,500)==0) 
+            fprintf('GLM-GB: t=%d, parameter estimation error = %f. \n', t, ...
+                norm(b - betahat, 'fro'))
+        end
+    end
+end
+fractions = mean(pull_ind);  % Fraction of times each arm is pulled.
+if(verbose==1)
+    fprintf('GLM-GB: Total parameter estimation error = %f. \n', ...
+        norm(b - betahat, 'fro'));
+    fprintf('GLM-GB: Fraction of pulls = %f. \n', fractions);
+    fprintf('GLM-GB: Total regret occured = %f. \n', regret(end));
+end
+end
+
+
+
+
+##### SOURCE END #####
+--></body></html>
