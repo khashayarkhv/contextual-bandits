@@ -33,6 +33,8 @@
 %   regret: Cumulative regret as a running sum over regret terms.
 %   fractions: Fractions of pulls of different arms.
 %
+%% Code:
+%
 
 
 function [regret, fractions] = rungreedybanditlogistic(k, T, d, b, ...

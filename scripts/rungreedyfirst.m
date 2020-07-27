@@ -63,6 +63,9 @@
 %   switched: The time at which Greedy-First switches to OLS bandit. If the
 %       algorithm does not switch, this is equal to -1.
 %
+%% Code:
+%
+
 
 function [regret, fractions, switched] = rungreedyfirst(k, T, d, b, ...
     sigma_e, sigma_x, xmax, h, ...

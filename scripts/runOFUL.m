@@ -12,7 +12,7 @@
 % theta, parameter (of interest) in R^{k*d}. The k actions at time 
 % period t, with context x_t are given by:
 % A_t = {[X_t, 0, 0, ..., 0], [0, X_t, 0, 0, ..., 0], ... ,                
-% [0, 0, ..., X_t]}$. After having this mapping, the algorithm builds
+% [0, 0, ..., X_t]}. After having this mapping, the algorithm builds
 % confidence sets around theta and picks the action (corresponds to the
 % same arm) that maximizes the optimistic reward. 
 
@@ -56,6 +56,8 @@
 %
 %   regret: Cumulative regret as a running sum over regret terms.
 %   fractions: Fractions of pulls of different arms.
+%
+%% Code:
 %
 
 

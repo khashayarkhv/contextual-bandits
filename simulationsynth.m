@@ -13,8 +13,8 @@ rng(random_seed);
 tic
 addpath('scripts');
 %
-%% CHANGE THESE BINARY INPUTS TO GENERATE FIGURES (a) TO (d).
-correct_noise = 1;  % Binary, OFUL and TS use correct priors/noise.
+%% CHANGE THESE BINARY INPUTS TO GENERATE FIGURES 2(a) TO 2(d).
+correct_noise = 0;  % Binary, OFUL and TS use correct priors/noise.
 intercept = 1;    % Binary, whether to include intercept or not.
 
 %% Problem parameters.
@@ -51,9 +51,9 @@ deltaOFUL = 0.99;
 deltaTS = 0.99;
 priorTS = 0.2;
 % Greedy-First parameters.
-min_eig_threshold = 1e-10;
-t0 = 4*k*d;
-sigma_start = 10;
+min_eig_threshold = 1e-5;
+t0 = 4 * k * d;
+sigma_start = 100;
 % Number of rounds of random sampling in the beginning (for Greedy and
 % Greedy-First)
 random_initialization = 0;
@@ -75,7 +75,7 @@ noise_input = 1;
 xmax = max([abs(disc_lowlim), abs(disc_uplim), ...
     abs(cont_lowlim), abs(cont_uplim)]);    % Maximum l_infinity norm.
 
-intercept_scale = 2e-1*intercept;   % The intercept value.
+intercept_scale = 2e-1 * intercept;   % The intercept value.
 
 %% Matrices for saving regrets.
 reg_gb = zeros(ns, T);
@@ -133,7 +133,7 @@ for s=1:ns
     X=[Xcont, Xdisc];
     if (intercept ==1)
         X(:,1) = ones(T, 1);    % Ignore the first dimension.  
-        b(:,1)= b(:, 1)*intercept_scale;  % Scale of intercept
+        b(:,1)= b(:, 1)*intercept_scale;  % Scale of intercept.
     end
     [tmp_reg_ofls, tmp_frac_oful] = runOFUL(k, T, d, b, sigma_e, ...
         sigma_x, xmax, lambdaOFUL, deltaOFUL, ...
@@ -159,6 +159,7 @@ for s=1:ns
     reg_pf_ts(s,:)=tmp_reg_pf_ts;
     reg_gf(s,:)=tmp_reg_gf;
     reg_pd_ts(s,:) = tmp_reg_pd_ts;
+    %
     fprintf('Total Regret after %d simulations \n', s)
     fprintf('GB=%f \n', mean(reg_gb(1:s,end)))
     fprintf('GF=%f \n', mean(reg_gf(1:s,end)))
@@ -167,8 +168,7 @@ for s=1:ns
     fprintf('PF-TS=%f \n', mean(reg_pf_ts(1:s,end)))
     fprintf('PD-TS=%f \n', mean(reg_pd_ts(1:s,end)))
     
-    % test variables
-    %reg_tmp(s,:)=tmp_reg_tmp;
+    %
     frac_gf(s,:) = tmp_frac_gf;
     frac_gb(s,:) = tmp_frac_gb;
     frac_OFUL(s,:) = tmp_frac_oful;

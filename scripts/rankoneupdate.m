@@ -36,6 +36,10 @@
 % x = [1; 2];
 % y = 2;
 % [XtopX_inverse, beta] = rankoneupdate(XtopX_previous_inverse, beta_previous, x, y)
+%
+%% Code:
+%
+
 
 function [XtopX_inverse, beta] = rankoneupdate(XtopX_previous_inverse, ...
                                                beta_previous, x, y)

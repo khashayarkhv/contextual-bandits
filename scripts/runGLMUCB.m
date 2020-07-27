@@ -24,6 +24,8 @@
 %   regret: Cumulative regret as a running sum over regret terms.
 %   fractions: Fractions of pulls of different arms.
 %
+%% Code:
+%
 
 
 function [regret, fractions] = runGLMUCB(k, T, d, b, xmax, ...
@@ -123,8 +125,8 @@ for t=1:T
     
     if (verbose==1)
         if (mod(t,500)==0) 
-            fprintf('GLM-UCB: t=%d, Error in estimation = %f\n', t, ...
-                norm(b-betahat,2))
+            fprintf('GLM-UCB: t=%d, parameter estimation error = %f. \n', t, ...
+                norm(b - betahat, 'fro'))
         end
     end
     
@@ -132,9 +134,10 @@ end
 
 fractions = mean(pull_ind);  %fraction of times each arm is pulled
 if(verbose == 1)
-    fprintf('GLM-UCB: Error in estimation = %f\n', norm(b-betahat,2));
-    fprintf('GLM-UCB: Fraction of pulls = %f\n', fractions);
-    fprintf('GLM-UCB: Regret Occured = %f\n',regret(end));
+    fprintf('GLM-UCB: Total parameter estimation error = %f. \n', ...
+        norm(b - betahat, 'fro'));
+    fprintf('GLM-UCB: Fraction of pulls = %f. \n', fractions);
+    fprintf('GLM-UCB: Total regret occured = %f. \n', regret(end));
 end
 
 end

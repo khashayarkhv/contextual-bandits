@@ -47,6 +47,8 @@
 %   fractions: Fractions of pulls of different arms.
 %   pull_ind: Matrix of pulls.
 %
+%% Code:
+%
 
 
 function [regret, fractions, pull_ind] = runOLSbandit(k, T, d, b, ...

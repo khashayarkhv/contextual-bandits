@@ -15,6 +15,9 @@
 %
 %   regret: Cumulative regret as a running sum over regret terms.
 %
+%% Code:
+%
+
 
 function regret = rundoctor(T, rewards)
 

@@ -183,7 +183,7 @@ end
 %% Save the results and create plots.
 if(strcmp(dataset, 'Warfarin')==1)
     namedata = strcat('warfarin_ns_', num2str(ns));
-elseif(strcmp(dataset,' EyeMovement')==1)
+elseif(strcmp(dataset, 'EyeMovement')==1)
     namedata = strcat('eyemovement_ns_', num2str(ns));  
 elseif(strcmp(dataset, 'EEG')==1)
     namedata = strcat('EEG_ns_', num2str(ns));
