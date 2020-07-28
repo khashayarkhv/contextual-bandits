@@ -7,11 +7,11 @@ This repository includes Matlab scripts for running contextual bandits algorithm
 
 The scripts containing the implementation of various algorithms discussed in the paper can be found in the folder /scripts. Under the same folder you can find more information about how each algorithm is executed. There following three main scripts in the root folder that generate the results presented in the paper:
 
-* `simulationsynth.m` : this corresponds to the synthetic simulations with linear rewards described in Section 5.1 of the paper. 
+* `simulationsynth.m`: this corresponds to the synthetic simulations with linear rewards described in Section 5.1 of the paper. 
 
-* `simulationslogistic.m`: this corresponds to the synthethic simulations with logistic rewards described in Section 5.1 of the paper.
+* `simulationslogistic.m': this corresponds to the synthethic simulations with logistic rewards described in Section 5.1 of the paper.
 
-* `simulationsreal.m` : this corressponds to the simulations on real datasets presented in Section 5.2 of the paper (see below on the information about the datasets).
+* `simulationsreal.m`: this corressponds to the simulations on real datasets presented in Section 5.2 of the paper (see below on the information about the datasets).
 
 # Datasets
 
@@ -21,7 +21,7 @@ The datasets used for real data simulations that can be found under the folder /
 
 * <a href="https://www.openml.org/d/1044"> Eye Movement</a>.
 
-* <a href="https://www.openml.org/d/1560"> Cardiotocography<a/> which is derived from <a href="https://archive.ics.uci.edu/ml/datasets/Cardiotocography"> this dataset <a/>. 
+* <a href="https://www.openml.org/d/1560"> Cardiotocography<a/> which is derived from <a href="https://archive.ics.uci.edu/ml/datasets/Cardiotocography"> this dataset<a/>. 
  
 * Warfarin dataset that can be downloaded from <a href="https://www.pharmgkb.org/downloads"> here<a/>.
   
