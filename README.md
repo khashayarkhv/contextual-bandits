@@ -62,9 +62,9 @@ D. Ayres-de-Campos, J. Bernardes, A. Garrido, J. Marques-de-Sa, and L. Pereira-L
 
 International Warfarin Pharmacogenetics Consortium. 
 **Estimation of the warfarin dose with clinical and pharmacogenetic data.** 
-*New England Journal of Medicine, 360(8), 753-764.*, (2009). 
+*New England Journal of Medicine, 360(8), 753-764.*, 2009. 
 
 D. Dua and C. Graff.
 **UCI Machine Learning Repository, http://archive.ics.uci.edu/ml.**
-*Irvine, CA: University of California, School of Information and Computer Science*, (2019). 
+*Irvine, CA: University of California, School of Information and Computer Science*, 2019. 
 
