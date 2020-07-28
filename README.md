@@ -57,14 +57,14 @@ J. Salojärvi, K. Puolamäki, J. Simola, L. Kovanen, I. Kojo, and S. Kaski.
 
 D. Ayres-de-Campos, J. Bernardes, A. Garrido, J. Marques-de-Sa, and L. Pereira-Leite.
 **SisPorto 2.0: a program for automated analysis of cardiotocograms.**
-[*Journal of Maternal-Fetal Medicine, 9(5), 311-318.], 2000.
+*Journal of Maternal-Fetal Medicine, 9(5), 311-318.*, 2000.
 
 
 International Warfarin Pharmacogenetics Consortium. 
 **Estimation of the warfarin dose with clinical and pharmacogenetic data.** 
-[*New England Journal of Medicine, 360(8), 753-764.], (2009). 
+*New England Journal of Medicine, 360(8), 753-764.*, (2009). 
 
 D. Dua and C. Graff.
-**UCI Machine Learning Repository, http://archive.ics.uci.edu/ml].**
-[*Irvine, CA: University of California, School of Information and Computer Science*], (2019). 
+**UCI Machine Learning Repository, http://archive.ics.uci.edu/ml.**
+*Irvine, CA: University of California, School of Information and Computer Science*, (2019). 
 
