@@ -9,7 +9,7 @@ The scripts containing the implementation of various algorithms discussed in the
 
 * `simulationsynth.m`: this corresponds to the synthetic simulations with linear rewards described in Section 5.1 of the paper. 
 
-* `simulationslogistic.m': this corresponds to the synthethic simulations with logistic rewards described in Section 5.1 of the paper.
+* `simulationslogistic.m`: this corresponds to the synthethic simulations with logistic rewards described in Section 5.1 of the paper.
 
 * `simulationsreal.m`: this corressponds to the simulations on real datasets presented in Section 5.2 of the paper (see below on the information about the datasets).
 
