@@ -43,6 +43,9 @@ BibTex:
 }
 ```
 
+Any question about the scripts can be directed to the authors <a href = "mailto: khashayar.khv@gmail.com"> via email</a>.
+
+
 # References
 
 H. Bastani, M. Bayati, and K. Khosravi.
